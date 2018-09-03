@@ -4,7 +4,7 @@ import br.unip.model.items.Item;
 import br.unip.model.items.ItemFactory;
 import br.unip.model.items.ItemTypes;
 import br.unip.model.lists.exceptions.FullListException;
-import br.unip.model.sorters.BubbleSorter;
+import br.unip.model.sorters.QuickSorter;
 import br.unip.model.sorters.Sorter;
 
 public class VectorListPopulator {
@@ -12,7 +12,7 @@ public class VectorListPopulator {
     private Sorter generatorSorter;
     
     public VectorListPopulator(){
-	this(new BubbleSorter());
+	this(new QuickSorter());
     }
 
     public VectorListPopulator(Sorter generatorSorter) {
@@ -40,7 +40,7 @@ public class VectorListPopulator {
     
     public void populateOrdered (ItemTypes itemType, VectorList list, int numItems){
 	this.populateRandom(itemType, list, numItems);
-	generatorSorter.sort(list.getItems(), list.getNumItems(), false);
+	generatorSorter.sort(list.getItems(), false);
     }
     
     public void populateSemiOrdered (ItemTypes itemType, VectorList list){
@@ -53,7 +53,7 @@ public class VectorListPopulator {
 	
 	Comparable[] tmpItems = new Comparable[tempVectorSize];
 	System.arraycopy(list.getItems(), 0, tmpItems, 0, tempVectorSize);
-	generatorSorter.sort(tmpItems, tempVectorSize, false);
+	generatorSorter.sort(tmpItems, false);
 	System.arraycopy(tmpItems, 0, list.getItems(), 0, tempVectorSize);
     }
     

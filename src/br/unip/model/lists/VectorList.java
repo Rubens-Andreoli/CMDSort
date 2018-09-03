@@ -37,7 +37,7 @@ public class VectorList<Type extends Item> implements Serializable, Iterable{
 
     public void sort(Sorter sorter, Boolean isReverse) {
 	sortMethod = sorter;
-	sortMethod.sort(items, numItems, isReverse);
+	sortMethod.sort(items, isReverse);
 	sorted = true;
     }
 

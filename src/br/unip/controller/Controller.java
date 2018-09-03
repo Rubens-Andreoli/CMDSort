@@ -3,18 +3,15 @@ package br.unip.controller;
 
 import br.unip.controller.actions.Generate;
 import br.unip.controller.actions.Open;
+import br.unip.controller.actions.Order;
 import br.unip.controller.actions.Save;
-import java.io.File;
+import br.unip.controller.actions.Show;
 import br.unip.model.lists.VectorList;
-import br.unip.model.sorters.BubbleSorter;
-import br.unip.model.sorters.MergeSorter;
-import br.unip.model.sorters.QuickSorter;
-import br.unip.view.MenuScreen;
-import br.unip.view.QuestionScreen;
-import br.unip.view.TextScreen;
 import br.unip.view.inputs.BooleanInput;
 import br.unip.view.inputs.IntInput;
-import br.unip.view.inputs.WordInput;
+import br.unip.view.inputs.StringInput;
+import br.unip.view.screens.MenuScreen;
+import br.unip.view.screens.QuestionScreen;
 
 public class Controller {
     public static final String SAVE_FOLDER = "lists";
@@ -24,11 +21,9 @@ public class Controller {
     private MenuScreen generateSubMenu;
     private QuestionScreen generateQuestion;
     private QuestionScreen saveQuestion;
-    private MenuScreen openMenu;
     private MenuScreen orderMenu;
     private QuestionScreen orderQuestion;
     private VectorList list;
-    private File[] filesList;
     
     public void startView(){
         mainMenu = new MenuScreen("Listas - Métodos de Ordenação",
@@ -47,10 +42,10 @@ public class Controller {
 		new IntInput("Digite a quantidade de elementos desejada: "));
 	
 	saveQuestion = new QuestionScreen("Salvar lista", 
-		new WordInput("Digite o nome da lista a ser salva: "));
+		new StringInput("Digite o nome da lista a ser salva: ", "([a-zA-Z0-9_-]{2,})"));
 	
 	orderMenu = new MenuScreen("Ordenar [Método]",
-                new String[]{"Método bubble", "Método merge", "Método quick", "Comparativo de desempenho"},
+                new String[]{"Método bubble", "Método insertion", "Método merge", "Método quick", "Comparativo de desempenho"},
                 "Digite a opção desejada de acordo com o menu");
 	
 	orderQuestion = new QuestionScreen("Ordenar [Ordem]", 
@@ -61,88 +56,35 @@ public class Controller {
     public void controlView(){
         do{
 	    mainMenu.display();
-	    switch(mainMenu.getInput()){
+	    switch(mainMenu.getUserInput()){
 		case 1:
 		    list = new Generate(generateMenu, generateSubMenu, generateQuestion).doAction();
 		    break;
 		case 2:
-		    new Save(mainMenu, saveQuestion, list).doAction();
+		    if(list == null){
+			mainMenu.setFooter("Não há lista para ser salva!");
+			mainMenu.displayFooter(true);
+		    }else new Save(mainMenu, saveQuestion, list).doAction();
 		    break;
 		case 3:
-		    new Open(mainMenu, openMenu, list, filesList).doActtion();
+		    list = new Open(mainMenu).doAction();
 		    break;
 		case 4:
-		    if(list == null){ 
+		    if (list == null) {
 			mainMenu.setFooter("Não há lista para ser ordenada!");
-			mainMenu.displayFooter();
-		    }else{ 
-			if(list.isSorted()){
-			    mainMenu.setFooter("A lista já está ordenada!");
-			    mainMenu.displayFooter();
-			}else{
-			    orderMenu.display();
-			    orderQuestion.display();
-			    //orderQuestion.setFooter("Processando...\n");
-			    //orderQuestion.displayFooter();
-			    long time = this.orderList()[0];
-			    if(orderMenu.getInput() == 4){
-				//TODO: Exibir comparativo!
-			    }else{
-				new TextScreen("Ordenação pelo "+list.getSortMethod().getMethodName(),
-					list.getSortMethod().getMethodBrief(),
-					"A ordenação foi concluida com sucesso em "+time+" ms.\n").display();
-			    }
-			}
-		    }
+			mainMenu.displayFooter(true);
+		    } else if (list.isSorted()) {
+			mainMenu.setFooter("A lista já está ordenada!");
+			mainMenu.displayFooter(true);
+		    }else new Order(orderMenu, orderQuestion, list).doAction();
 		    break;
 		case 5:
 		    if(list == null) {
 			mainMenu.setFooter("Não há lista para ser exibida!");
-			mainMenu.displayFooter();
-		    }else new TextScreen("Visualização de lista", 
-			    list.toString(list.getMaxItems()>200?200:null), 
-			    String.format("Lista %s, exibida com sucesso.", list.isSorted()?"ordenada pelo "+list.getSortMethod().getMethodName():"não ordenada")).display();
+			mainMenu.displayFooter(true);
+		    }else new Show(list).doAction();
 	    }
-	}while(mainMenu.getInput() != 8);
-    }
-    
-    private long[] orderList(){
-	long start;
-	long end;
-	switch(orderMenu.getInput()){
-	    case 1:
-		start = System.currentTimeMillis();
-		list.sort(new BubbleSorter(), (boolean)orderQuestion.getInput());
-		end = System.currentTimeMillis();
-		return new long[]{end-start};
-	    case 2:
-		start = System.currentTimeMillis();
-		list.sort(new MergeSorter(), (boolean)orderQuestion.getInput());
-		end = System.currentTimeMillis();
-		return new long[]{end-start};
-	    case 3:
-		start = System.currentTimeMillis();
-		list.sort(new QuickSorter(), (boolean)orderQuestion.getInput());
-		end = System.currentTimeMillis();
-		return new long[]{end-start};
-	    case 4:
-		long[] times = new long[3];
-		start = System.currentTimeMillis();
-		new VectorList(list).sort(new BubbleSorter(), (boolean)orderQuestion.getInput());
-		end = System.currentTimeMillis();
-		times[0] = end-start;
-		start = System.currentTimeMillis();
-		new VectorList(list).sort(new MergeSorter(), (boolean)orderQuestion.getInput());
-		end = System.currentTimeMillis();
-		times[1] = end-start;
-		start = System.currentTimeMillis();
-		new VectorList(list).sort(new QuickSorter(), (boolean)orderQuestion.getInput());
-		end = System.currentTimeMillis();
-		times[2] = end-start;
-		return times;
-	    default:
-		return null;
-	}
+	}while(mainMenu.getUserInput() != 8);
     }
     
 }

@@ -1,16 +1,17 @@
 package br.unip.view.inputs;
 
-import br.unip.view.output.components.SimpleText;
+import br.unip.view.inputs.lang.Alerts;
+import br.unip.view.outputs.components.SimpleText;
 
 public class BooleanInput extends CmdInput{
     private final char isTrue; 
     private final char isFalse;
     
-    public BooleanInput(String prompt) {
+    public BooleanInput(final String prompt) {
 	this(prompt, 's', 'n');
     }
     
-    public BooleanInput(String prompt, char isTrue, char isFalse){
+    public BooleanInput(final String prompt, final char isTrue, final char isFalse){
 	super(prompt);
 	this.isTrue = isTrue;
 	this.isFalse = isFalse;
@@ -32,7 +33,7 @@ public class BooleanInput extends CmdInput{
 			return false;
 		}
 	    }
-	    new SimpleText("Input inválido! Digite uma opção.\n\n").print();
+	    new SimpleText(Alerts.BOOLEAN_ERROR).print();
 	}
     }
     

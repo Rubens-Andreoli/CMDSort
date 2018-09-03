@@ -1,14 +1,14 @@
 package br.unip.view.inputs;
 
 import java.util.Scanner;
-import br.unip.view.output.components.SimpleText;
+import br.unip.view.outputs.components.SimpleText;
 
 public abstract class CmdInput {
     
     protected final String prompt;
     protected Scanner scanner;
     
-    public CmdInput(String prompt){
+    public CmdInput(final String prompt){
 	this.prompt = prompt;
     }
     
@@ -18,5 +18,13 @@ public abstract class CmdInput {
     }
     
     public abstract Object getInput();
+    
+    public Object[] getLoopped(int repeat) {
+	Object[] inputs = new Object[repeat];
+	for(int i=0; i<repeat; i++){
+	    inputs[i] = this.getInput();
+	}
+	return inputs;
+    }
     
 }

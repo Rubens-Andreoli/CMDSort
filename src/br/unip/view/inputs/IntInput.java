@@ -1,10 +1,11 @@
 package br.unip.view.inputs;
 
-import br.unip.view.output.components.SimpleText;
+import br.unip.view.inputs.lang.Alerts;
+import br.unip.view.outputs.components.SimpleText;
 
-public final class IntInput extends CmdInput {
+public class IntInput extends CmdInput {
 
-    public IntInput(String prompt) {
+    public IntInput(final String prompt) {
 	super(prompt);
     }
     
@@ -15,8 +16,8 @@ public final class IntInput extends CmdInput {
 	    if(scanner.hasNextInt()) 
 		return scanner.nextInt();
 	    else 
-		new SimpleText("Input inválido! Digite um número inteiro.\n\n").print();
+		new SimpleText(Alerts.INT_ERROR).print();
 	}
     }
-    
+
 }

@@ -1,10 +1,12 @@
 
 package br.unip.view.inputs;
 
-public final class EnterInput extends CmdInput {
+import br.unip.view.inputs.lang.Alerts;
+
+public class EnterInput extends CmdInput {
 
     public EnterInput() {
-	super("Pressione ENTER para continuar.");
+	super(Alerts.ENTER_MSG);
     }
     
     @Override

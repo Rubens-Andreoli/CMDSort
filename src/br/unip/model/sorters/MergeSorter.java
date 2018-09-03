@@ -3,7 +3,7 @@ package br.unip.model.sorters;
 public class MergeSorter implements Sorter{
 
     @Override
-    public void sort(Comparable[] items, int numItems, boolean isReverse) {
+    public void sort(Comparable[] items, boolean isReverse) {
 	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

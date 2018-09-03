@@ -1,23 +1,6 @@
 package br.unip.main;
 
 import br.unip.controller.Controller;
-import java.io.File;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import br.unip.model.items.IntItem;
-import br.unip.model.lists.VectorList;
-import br.unip.model.io.FileIO;
-import br.unip.model.items.MiscItem;
-import br.unip.model.lists.exceptions.FullListException;
-import br.unip.model.sorters.BubbleSorter;
-import br.unip.model.sorters.Sorter;
-import br.unip.view.MenuScreen;
-import br.unip.view.QuestionScreen;
-import br.unip.view.TextScreen;
-import br.unip.view.inputs.BooleanInput;
-import br.unip.view.inputs.IntInput;
 
 public class Main {
 
@@ -27,7 +10,6 @@ public class Main {
         controller.startView();
         controller.controlView();
         
-	
 	/*IntItem item = new IntItem();
 	item.setValue(20);
 	System.out.println(item.toString());*/

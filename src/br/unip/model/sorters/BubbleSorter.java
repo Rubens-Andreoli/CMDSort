@@ -3,9 +3,9 @@ package br.unip.model.sorters;
 public class BubbleSorter implements Sorter{
 
     @Override
-    public void sort(Comparable[] items, int numItems, boolean isReverse) {
-	for(int i=0; i < numItems; i++){
-	    for(int n=i+1; n < numItems; n++){
+    public void sort(Comparable[] items, boolean isReverse) {
+	for(int i=0; i < items.length; i++){
+	    for(int n=i+1; n < items.length; n++){
 		int comparison = items[i].compareTo(items[n]);
 		if(isReverse) comparison*=(-1);
 		if(comparison > 0){
