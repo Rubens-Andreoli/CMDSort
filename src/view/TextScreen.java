@@ -10,7 +10,7 @@ public class TextScreen extends Screen {
     private ClosedText text;
     
     public TextScreen(String title, String text){
-	this.title = new TopBox(title);
+	this.top = new TopBox(title);
 	this.text = new ClosedText(text);
     }
     
@@ -19,8 +19,9 @@ public class TextScreen extends Screen {
 	this.footer = new SimpleText(footer);
     }
     
+    @Override
     public void display(){
-	title.print();
+	top.print();
 	text.print();
 	new DashLine(2).print();
 	this.displayFooter();

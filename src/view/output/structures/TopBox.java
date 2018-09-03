@@ -16,12 +16,8 @@ public class TopBox implements CmdOutput{
     }
     
     public TopBox(String title, int bottomLines){
-	this.title = title;
+	this.title = title.toUpperCase();
 	this.bottomLines = bottomLines;
-    }
-
-    public TopBox() {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     @Override

@@ -5,7 +5,7 @@ import view.output.components.SimpleText;
 import view.output.structures.TopBox;
 
 public abstract class Screen {
-    protected TopBox title;
+    protected TopBox top;
     protected SimpleText footer;
     
     public void setFooter(String footer) {

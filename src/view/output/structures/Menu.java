@@ -5,15 +5,32 @@ import view.output.CmdOutput;
 
 public class Menu implements CmdOutput{
 
-    private final String items[];
+    private String[] items;
+    private int numItems;
     
-    public Menu(String items[]){
+    protected Menu(){}
+    
+    public Menu(String[] items){
+	this.items = new String[items.length];
+	for(numItems=0; numItems<items.length; numItems++)
+	    this.items[numItems] = String.format("%2d - %s", numItems+1, items[numItems].toUpperCase());
+    }
+    
+    protected void setItems(String[] items) {
 	this.items = items;
+    }
+
+    public int getNumItems() {
+	return numItems;
+    } 
+
+    protected void setNumItems(int numItems) {
+	this.numItems = numItems;
     }
 
     @Override
     public void print(){
-	for(int i=0; i<items.length /*&& i<MAX_ITEMS*/; i++)
-	    new ClosedText(String.format("%2d - %s", i+1, items[i])).print();
+	for(String item : items)
+	    new ClosedText(item).print();
     }
 }

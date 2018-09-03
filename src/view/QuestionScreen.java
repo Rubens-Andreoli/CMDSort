@@ -4,11 +4,11 @@ import view.inputs.CmdInput;
 import view.output.structures.TopBox;
 
 public class QuestionScreen extends Screen{
-    private CmdInput prompt;
+    private final CmdInput prompt;
     private Object input;
     
     public QuestionScreen(String title, CmdInput cmdInput){
-	this.title = new TopBox(title, 2);
+	this.top = new TopBox(title, 2);
 	this.prompt = cmdInput;
     }
 
@@ -18,7 +18,7 @@ public class QuestionScreen extends Screen{
 
     @Override
     public void display() {
-	title.print();
+	top.print();
 	prompt.getInput();
     }
     

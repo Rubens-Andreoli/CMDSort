@@ -10,7 +10,7 @@ import model.lists.exceptions.EmptyListException;
 import model.lists.exceptions.FullListException;
 import model.sorters.Sorter;
 
-public class VectorList<Type extends Item> implements Serializable, Iterable {
+public class VectorList<Type extends Comparable> implements Serializable, Iterable {
     private static final long serialVersionUID = 1L;
 
     private Type[] items;
@@ -20,7 +20,7 @@ public class VectorList<Type extends Item> implements Serializable, Iterable {
     private boolean sorted;
 
     public VectorList(int maxItems) {
-	items = (Type[]) new Item[maxItems];
+	items = (Type[]) new Comparable[maxItems];
 	this.maxItems = maxItems;
 	numItems = 0;
 	sorted = false;
@@ -85,6 +85,6 @@ public class VectorList<Type extends Item> implements Serializable, Iterable {
     }
     
     public void writeToFile(File file) throws IOException{
-	new FileIO().write(this, file);
+	new FileIO().writeFile(this, file);
     }
 }
