@@ -1,8 +1,13 @@
-package model.Items;
+package model.items;
 
 public class MiscItem implements Item<MiscItem>{
+    private static final long serialVersionUID = 1L;
+    
     private char ch;
     private int value;
+    private static final int MAX_VALUE = 1000;
+    private static final char START_CH = 'A';
+    private static final int MAX_CH = 26;	    /*Valor de 'ch' máximo com início em 'START_CH'*/
 
     public void setItem(char ch, int value){
 	this.ch = Character.toUpperCase(ch);
@@ -18,18 +23,39 @@ public class MiscItem implements Item<MiscItem>{
     }
     
     @Override
-    public int compareTo(MiscItem o) {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int compareTo(MiscItem item) {
+	if(this.ch == item.ch){
+	    if(this.value == item.value)
+		return 0;
+	    if(this.value > item.value)
+		return 1;
+	    return -1;
+	}else if(this.ch > item.ch){
+	    return 1;
+	}else{
+	    return -1;
+	}
     }
 
     @Override
     public void generateRandom() {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	value = (int) (Math.random() * MAX_VALUE);
+	ch = (char) (START_CH + ((int) (Math.random() * MAX_CH)));
     }
 
     @Override
     public String toString() {
 	return ch+Integer.toString(value);
     }
+
+    /*@Override
+    public void generateNext(MiscItem obj) {
+	if(obj.value == MAX_VALUE){
+	    this.ch = (char) ((obj.getChar()+1)%26);
+	    this.value = 1;
+	}else{
+	    this.value = obj.value+1;
+	}
+    }*/
     
 }

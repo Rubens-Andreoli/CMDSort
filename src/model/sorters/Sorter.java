@@ -2,7 +2,7 @@ package model.sorters;
 
 public interface Sorter {
     
-    Comparable[] sort(Comparable[] items);
-    Comparable[] sortReverse(Comparable[] items);
-    
+    void sort(Comparable[] items, int numItems, boolean isReverse);
+    String getMethodName();
+    String getMethodBrief();
 }

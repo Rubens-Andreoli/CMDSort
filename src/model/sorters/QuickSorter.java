@@ -3,13 +3,18 @@ package model.sorters;
 public class QuickSorter implements Sorter{
 
     @Override
-    public Comparable[] sort(Comparable[] items) {
+    public void sort(Comparable[] items, int numItems, boolean isReverse) {
 	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Comparable[] sortReverse(Comparable[] items) {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String getMethodName() {
+	return "Método Quick";
+    }
+
+    @Override
+    public String getMethodBrief() {
+	return "O Quick Sort se baseia na ideia de escolher um elemento que se denomina \"pivô\", ele será considerado uma referência de ordenação, do qual os elementos que possuem um valor menor que o pivô serão postos antes dele, e os valores que são maiores que a referência após ele.";
     }
     
 }

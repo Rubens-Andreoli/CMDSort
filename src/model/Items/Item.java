@@ -1,7 +1,7 @@
-package model.Items;
+package model.items;
 
-public interface Item<Type extends Item> extends Comparable<Type>{
-    
-    void generateRandom();
+import java.io.Serializable;
+
+public interface Item<ItemType extends Item> extends Comparable<ItemType>, Generatable, Serializable{
     
 }
