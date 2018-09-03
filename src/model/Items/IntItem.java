@@ -29,11 +29,4 @@ public class IntItem implements Item<IntItem>{
 	return Integer.toString(value);
     } 
 
-    /*@Override
-    public void generateNext(IntItem obj) {
-	if(this.value == MAX_VALUE)
-	    value = 1;
-	else
-	    value = obj.value+1;
-    }*/
 }

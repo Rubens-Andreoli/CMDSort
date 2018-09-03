@@ -1,43 +1,46 @@
 package model.lists;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Iterator;
 import model.FileIO;
+import model.items.Item;
+import model.lists.exceptions.EmptyListException;
+import model.lists.exceptions.FullListException;
 import model.sorters.Sorter;
 
-public class VectorList<Type extends Comparable> implements Serializable, Iterable {
+public class VectorList<Type extends Item> implements Serializable, Iterable {
     private static final long serialVersionUID = 1L;
 
-    private Comparable[] items;
+    private Type[] items;
     private final int maxItems;
     private int numItems;
     private String sortMethod;
     private boolean sorted;
 
     public VectorList(int maxItems) {
-	items = new Comparable[maxItems];
+	items = (Type[]) new Item[maxItems];
 	this.maxItems = maxItems;
 	numItems = 0;
 	sorted = false;
     }
 
-    public void addItem(Type item) {
+    public void addItem(Type item) throws FullListException {
 	if (numItems < maxItems) {
 	    items[numItems] = item;
 	    numItems++;
-	} else {
-	    //lista cheia!
-	}
+	} else throw new FullListException();
     }
 
-    public void sort(Sorter sorter, Boolean isReverse) {
+    public void sort(Sorter sorter, Boolean isReverse) throws EmptyListException {
+	if(numItems == 0) throw new EmptyListException();
 	sorter.sort(items, numItems, isReverse);
 	sortMethod = sorter.getMethodName();
 	sorted = true;
     }
 
-    public Comparable[] getItems() {
+    public Type[] getItems() {
 	return items;
     }
 
@@ -53,9 +56,13 @@ public class VectorList<Type extends Comparable> implements Serializable, Iterab
 	return sorted;
     }
 
+    public String getSortMethod() {
+	return sortMethod;
+    }
+
     @Override
     public Iterator iterator() {
-	Iterator<Comparable> iterator = new Iterator<Comparable>() {
+	Iterator<Type> iterator = new Iterator<Type>() {
 
 	    private int currentIndex = 0;
 
@@ -65,7 +72,7 @@ public class VectorList<Type extends Comparable> implements Serializable, Iterab
 	    }
 
 	    @Override
-	    public Comparable next() {
+	    public Type next() {
 		return items[currentIndex++];
 	    }
 
@@ -77,7 +84,7 @@ public class VectorList<Type extends Comparable> implements Serializable, Iterab
 	return iterator;
     }
     
-    public void writeToFile(File file){
+    public void writeToFile(File file) throws IOException{
 	new FileIO().write(this, file);
     }
 }

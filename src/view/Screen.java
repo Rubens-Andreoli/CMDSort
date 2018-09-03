@@ -17,7 +17,7 @@ public abstract class Screen {
     public void displayFooter(){
 	if(footer != null){ 
 	    footer.print();
-	    new EnterInput();
+	    new EnterInput().getInput();
 	}
     };
 	    

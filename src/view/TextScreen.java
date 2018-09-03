@@ -10,7 +10,7 @@ public class TextScreen extends Screen {
     private ClosedText text;
     
     public TextScreen(String title, String text){
-	this.title = new TopBox(title, 2);
+	this.title = new TopBox(title);
 	this.text = new ClosedText(text);
     }
     
@@ -29,7 +29,7 @@ public class TextScreen extends Screen {
     @Override
     public void displayFooter() {
 	if(footer != null) footer.print();
-	new EnterInput();
+	new EnterInput().getInput();
     }
     
 }

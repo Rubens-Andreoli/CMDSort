@@ -47,15 +47,5 @@ public class MiscItem implements Item<MiscItem>{
     public String toString() {
 	return ch+Integer.toString(value);
     }
-
-    /*@Override
-    public void generateNext(MiscItem obj) {
-	if(obj.value == MAX_VALUE){
-	    this.ch = (char) ((obj.getChar()+1)%26);
-	    this.value = 1;
-	}else{
-	    this.value = obj.value+1;
-	}
-    }*/
     
 }
