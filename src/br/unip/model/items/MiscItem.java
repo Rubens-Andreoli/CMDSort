@@ -2,7 +2,6 @@ package br.unip.model.items;
 
 public class MiscItem implements Item<MiscItem>{
     private static final long serialVersionUID = 1L;
-    public static final String ITEM_TYPE = "Misto";
     
     private char ch;
     private int value;

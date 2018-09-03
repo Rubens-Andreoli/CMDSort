@@ -2,7 +2,6 @@ package br.unip.model.items;
 
 public class IntItem implements Item<IntItem>{
     private static final long serialVersionUID = 1L;
-    public static final String ITEM_TYPE = "Inteiro";
     
     private int value;
     private static final int MAX_VALUE = 26000;
@@ -29,5 +28,5 @@ public class IntItem implements Item<IntItem>{
     public String toString() {
 	return Integer.toString(value);
     } 
-    
+
 }

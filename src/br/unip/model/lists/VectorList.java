@@ -2,9 +2,11 @@ package br.unip.model.lists;
 
 import java.io.Serializable;
 import java.util.Iterator;
+import br.unip.model.items.Item;
+import br.unip.model.lists.exceptions.FullListException;
 import br.unip.model.sorters.Sorter;
 
-public class VectorList<Type extends Comparable & Serializable> implements Serializable, Iterable{
+public class VectorList<Type extends Item> implements Serializable, Iterable{
     private static final long serialVersionUID = 1L;
 
     private Type[] items;
@@ -14,28 +16,28 @@ public class VectorList<Type extends Comparable & Serializable> implements Seria
     private boolean sorted;
 
     public VectorList(VectorList<Type> list){
-	this.items = list.items.clone();
+	this.items = list.items;
 	this.maxItems = list.maxItems;
 	this.numItems = list.numItems;
     }
     
     public VectorList(int maxItems) {
-	items = (Type[]) new Comparable[maxItems];
+	items = (Type[]) new Item[maxItems];
 	this.maxItems = maxItems;
 	numItems = 0;
 	sorted = false;
     }
 
-    public void addItem(Type item){
+    public void addItem(Type item) throws FullListException {
 	if (numItems < maxItems) {
 	    items[numItems] = item;
 	    numItems++;
-	}
+	} else throw new FullListException();
     }
 
     public void sort(Sorter sorter, Boolean isReverse) {
 	sortMethod = sorter;
-	sortMethod.sort(items, isReverse);
+	sortMethod.sort(items, numItems, isReverse);
 	sorted = true;
     }
 
