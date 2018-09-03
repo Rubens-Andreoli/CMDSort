@@ -1,30 +1,32 @@
 package br.unip.view.screens;
 
-import br.unip.view.outputs.components.CharLine;
-import br.unip.view.outputs.components.ClosedText;
-import br.unip.view.outputs.components.SimpleText;
-import br.unip.view.outputs.structures.TopBox;
+import br.unip.view.Builder;
+import br.unip.view.outputs.BoxedText;
+import br.unip.view.outputs.CharLine;
+import br.unip.view.outputs.CmdText;
+import br.unip.view.screens.components.*;
 
 public class TextScreen extends Screen {
     
-    private final ClosedText text;
-    
+    private final CmdText text;
+
     public TextScreen(final String title, final String text){
-	super(new TopBox(title));
-	this.text = new ClosedText(text);
+	super(Builder.build(new TopBox(title)));
+	this.text = Builder.build(new BoxedText(text));
     }
     
     public TextScreen(final String title, final String text, String footer){
 	this(title, text);
-	this.footer = new SimpleText(footer);
+	this.footer = Builder.build(new Footer(footer));
     }
     
     @Override
     public void display(){
-	top.print();
-	text.print();
-	new CharLine(2).print();
-	this.displayFooter(true);
+	top.println();
+	text.println();
+	Builder.build(new CharLine(2)).println();
+	if(footer != null) footer.println();
+	this.waitEnter();
     }
     
 }

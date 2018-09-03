@@ -1,56 +1,64 @@
 package br.unip.controller.actions;
 
-import br.unip.model.items.ItemTypes;
+import static br.unip.controller.Configs.*;
+import br.unip.model.items.generators.ItemGenerator;
 import br.unip.model.lists.VectorList;
-import br.unip.model.lists.VectorListPopulator;
+import br.unip.view.inputs.IntInput;
 import br.unip.view.screens.MenuScreen;
 import br.unip.view.screens.QuestionScreen;
+import java.util.List;
 
 public class Generate implements Action{
     
-    private final MenuScreen generateMenu;
-    private final MenuScreen generateSubMenu;
-    private final QuestionScreen generateQuestion;
+    private final List<ItemGenerator> generators;
+    private final MenuScreen itemMenu;
+    private final MenuScreen methodMenu;
+    private final QuestionScreen sizeQuestion;
     private VectorList list;
 
-    public Generate(final MenuScreen generateMenu, final MenuScreen generateSubMenu, final QuestionScreen generateQuestion) {
-	this.generateMenu = generateMenu;
-	this.generateSubMenu = generateSubMenu;
-	this.generateQuestion = generateQuestion;
+    public Generate(List<ItemGenerator> generators) {
+	this.generators = generators;
+	this.itemMenu =  new MenuScreen(GENERATE_ITEMS_TITLE, this.generatorsToString(), 
+		GENERATE_ITEMS_QUESTION);	
+	this.methodMenu = new MenuScreen(GENERATE_METHOD_TITLE, GENERATE_METHODS, 
+		GENERATE_METHOD_QUESTION);
+	this.sizeQuestion = new QuestionScreen(GENERATE_SIZE_TITLE, new IntInput(GENERATE_SIZE_PROMPT));
+    }
+    
+    private String[] generatorsToString(){
+	String[] items = new String[generators.size()];
+	for(int i=0; i<generators.size(); i++){
+	    items[i] = generators.get(i).getItemType();
+	}
+	return items;
     }
  
     @Override
     public VectorList doAction(){
-	generateMenu.display();
-	generateSubMenu.display();
-	generateQuestion.display();
-	if(generateSubMenu.getUserInput() > 1){ 
-	    this.populateList();
-	    generateQuestion.setFooter("Processando...\n");
-	    generateQuestion.displayFooter(false);
-	    return list;
-	}else{
-	    //TODO: Geração manual!
-	    return null;
-	}
+	itemMenu.display();
+	methodMenu.display();
+	sizeQuestion.display();
+	sizeQuestion.setFooter(INDICATOR_MSG);
+	sizeQuestion.displayFooter(true);
+	this.populateList();
+	return list;
     }
     
     private void populateList(){
-	list = new VectorList((int) generateQuestion.getUserInput());
-	switch(generateSubMenu.getUserInput()){
+	int size = (int) sizeQuestion.getUserInput();
+	list = new VectorList(size);
+	int itemChoice = itemMenu.getUserInput()-1;
+	switch(methodMenu.getUserInput()){
+	    case 1:
+		list.setItems(generators.get(itemChoice).generateRandom(size));
+		break;
 	    case 2:
-		if(generateMenu.getUserInput() == 1) new VectorListPopulator().populateRandom(ItemTypes.INTITEM, list);
-		if(generateMenu.getUserInput() == 2) new VectorListPopulator().populateRandom(ItemTypes.MISCITEM, list);
+		list.setItems(generators.get(itemChoice).generateSemiOrdered(size));
 		break;
 	    case 3:
-		if(generateMenu.getUserInput() == 1) new VectorListPopulator().populateSemiOrdered(ItemTypes.INTITEM, list);
-		if(generateMenu.getUserInput() == 2) new VectorListPopulator().populateSemiOrdered(ItemTypes.MISCITEM, list);
-		break;
-	    case 4:
-		if(generateMenu.getUserInput() == 1) new VectorListPopulator().populateOrdered(ItemTypes.INTITEM, list);
-		if(generateMenu.getUserInput() == 2) new VectorListPopulator().populateOrdered(ItemTypes.MISCITEM, list);
+		list.setItems(generators.get(itemChoice).generateOrdered(size));
 		break;
 	}
     }
-    
+   
 }

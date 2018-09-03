@@ -1,16 +1,18 @@
 package br.unip.view.inputs;
 
-import br.unip.view.inputs.lang.Alerts;
-import br.unip.view.outputs.components.SimpleText;
+import static br.unip.view.Configs.*;
+import br.unip.view.Builder;
+import br.unip.view.outputs.SimpleText;
 
-public class BooleanInput extends CmdInput{
+public class BooleanInput extends CmdInput<Boolean>{
+    
     private final char isTrue; 
     private final char isFalse;
     
     public BooleanInput(final String prompt) {
-	this(prompt, 's', 'n');
+	this(prompt, DFLT_BOOLEAN_YES, DFLT_BOOLEAN_NO);
     }
-    
+
     public BooleanInput(final String prompt, final char isTrue, final char isFalse){
 	super(prompt);
 	this.isTrue = isTrue;
@@ -33,8 +35,9 @@ public class BooleanInput extends CmdInput{
 			return false;
 		}
 	    }
-	    new SimpleText(Alerts.BOOLEAN_ERROR).print();
+	    Builder.build(new SimpleText(BOOLEAN_ERROR)).println();
 	}
     }
+
     
 }

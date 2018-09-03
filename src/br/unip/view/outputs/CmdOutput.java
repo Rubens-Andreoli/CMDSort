@@ -1,8 +1,10 @@
 package br.unip.view.outputs;
 
-public interface CmdOutput {
-    final int UI_SIZE = 78;
-    
+import br.unip.view.Buildable;
+
+public interface CmdOutput extends Buildable{   
+
     void print();
+    void println();  
     
 }

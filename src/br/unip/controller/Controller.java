@@ -1,90 +1,78 @@
 package br.unip.controller;
 
-
-import br.unip.controller.actions.Generate;
-import br.unip.controller.actions.Open;
-import br.unip.controller.actions.Order;
-import br.unip.controller.actions.Save;
-import br.unip.controller.actions.Show;
+import static br.unip.controller.Configs.*;
+import br.unip.controller.actions.*;
+import br.unip.model.items.generators.*;
 import br.unip.model.lists.VectorList;
-import br.unip.view.inputs.BooleanInput;
-import br.unip.view.inputs.IntInput;
-import br.unip.view.inputs.StringInput;
+import br.unip.model.sorters.*;
 import br.unip.view.screens.MenuScreen;
-import br.unip.view.screens.QuestionScreen;
+import br.unip.view.screens.TextScreen;
+import java.util.LinkedList;
 
 public class Controller {
-    public static final String SAVE_FOLDER = "lists";
     
     private MenuScreen mainMenu;
-    private MenuScreen generateMenu;
-    private MenuScreen generateSubMenu;
-    private QuestionScreen generateQuestion;
-    private QuestionScreen saveQuestion;
-    private MenuScreen orderMenu;
-    private QuestionScreen orderQuestion;
+    private TextScreen help;
+    private TextScreen about;
+    private LinkedList<Sorter> sorters;
+    private LinkedList<ItemGenerator> generators;
     private VectorList list;
-    
+
     public void startView(){
-        mainMenu = new MenuScreen("Listas - Métodos de Ordenação",
-                new String[]{"Gerar", "Salvar", "Abrir", "Ordenar", "Visualizar", "Ajuda", "Sobre", "Sair"},
-                "Digite a opção desejada de acordo com o menu");
-	
-	generateMenu = new MenuScreen("Geração de listas [Tipo de itens]", 
-		new String[]{"Inteiro", "Misto"}, 
-		"Digite a opção de acordo com o tipo de item desejado");
-	
-	generateSubMenu = new MenuScreen("Geração de listas [Forma de criação]", 
-                new String[]{"Manual", "Aleatória", "Semi-Ordenada", "Ordenada"},
-                "Digite a opção desejada para criação da lista");
-        
-	generateQuestion = new QuestionScreen("Geração de listas [Número de elementos]", 
-		new IntInput("Digite a quantidade de elementos desejada: "));
-	
-	saveQuestion = new QuestionScreen("Salvar lista", 
-		new StringInput("Digite o nome da lista a ser salva: ", "([a-zA-Z0-9_-]{2,})"));
-	
-	orderMenu = new MenuScreen("Ordenar [Método]",
-                new String[]{"Método bubble", "Método insertion", "Método merge", "Método quick", "Comparativo de desempenho"},
-                "Digite a opção desejada de acordo com o menu");
-	
-	orderQuestion = new QuestionScreen("Ordenar [Ordem]", 
-		new BooleanInput("Deseja ordenar em ordenar em ordem crescente ou decrescente (c/d)? ", 'd', 'c'));
+        mainMenu = new MenuScreen(MAIN_TITLE, ACTIONS, MAIN_QUESTION);
+	help = new TextScreen(HELP_TITLE, HELP);
+	about = new TextScreen(ABOUT_TITLE, ABOUT);
+
+	generators = new LinkedList<ItemGenerator>();
+	generators.add(new IntItemGenerator());
+	generators.add(new MiscItemGenerator());
+
+	sorters = new LinkedList<Sorter>();
+	sorters.add(new BubbleSorter());
+	sorters.add(new InsertionSorter());
+	sorters.add(new QuickSorter());
 	
     }
-    
+
     public void controlView(){
         do{
 	    mainMenu.display();
 	    switch(mainMenu.getUserInput()){
 		case 1:
-		    list = new Generate(generateMenu, generateSubMenu, generateQuestion).doAction();
+		    list = new Generate(generators).doAction();
 		    break;
 		case 2:
 		    if(list == null){
-			mainMenu.setFooter("Não há lista para ser salva!");
-			mainMenu.displayFooter(true);
-		    }else new Save(mainMenu, saveQuestion, list).doAction();
+			mainMenu.setFooter(SAVE_NULL);
+			mainMenu.displayFooter(false);
+			mainMenu.waitEnter();
+		    }else new Save(mainMenu, list).doAction();
 		    break;
 		case 3:
 		    list = new Open(mainMenu).doAction();
 		    break;
 		case 4:
 		    if (list == null) {
-			mainMenu.setFooter("Não há lista para ser ordenada!");
-			mainMenu.displayFooter(true);
-		    } else if (list.isSorted()) {
-			mainMenu.setFooter("A lista já está ordenada!");
-			mainMenu.displayFooter(true);
-		    }else new Order(orderMenu, orderQuestion, list).doAction();
+			mainMenu.setFooter(ORDER_NULL);
+			mainMenu.displayFooter(false);
+			mainMenu.waitEnter();
+		    } else new Order(sorters, list).doAction();
 		    break;
 		case 5:
 		    if(list == null) {
-			mainMenu.setFooter("Não há lista para ser exibida!");
-			mainMenu.displayFooter(true);
-		    }else new Show(list).doAction();
+			mainMenu.setFooter(SHOW_NULL);
+			mainMenu.displayFooter(false);
+			mainMenu.waitEnter();
+		    }else new Show(list, SHOW_MAX).doAction();
+		    break;
+		case 6:
+		    help.display();
+		    break;
+		case 7:
+		    about.display();
+		    break;
 	    }
-	}while(mainMenu.getUserInput() != 8);
+	}while(mainMenu.getUserInput() != ACTIONS.length);
     }
     
 }

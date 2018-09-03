@@ -19,13 +19,14 @@ public class FileIO<Type extends Serializable> {
     }
     
     public void writeFile(Type object, String rootFolder, String filename) throws IOException {
-	try (FileOutputStream fileOutput = new FileOutputStream(new File(System.getProperty("user.dir") + "\\"+rootFolder+"\\"+filename));
+	try (FileOutputStream fileOutput = new FileOutputStream(new File(System.getProperty("user.dir") 
+		+ "\\"+rootFolder+"\\"+filename));
 		ObjectOutputStream objectOutput = new ObjectOutputStream(fileOutput);) {
 	    objectOutput.writeObject(object);
 	}
     }
     
-    public File[] readFolder(String rootFolder){
+    public File[] readFolder(String rootFolder, String fileFormat){
         File listsFolder = new File(System.getProperty("user.dir") + "\\"+rootFolder);
 	if(!listsFolder.exists()){
 	    listsFolder.mkdir();
@@ -33,8 +34,7 @@ public class FileIO<Type extends Serializable> {
         return listsFolder.listFiles(new FileFilter(){
 	    @Override
 	    public boolean accept(File file) {
-		if(file.getName().endsWith(".lst")) return true;
-		return false;
+		return file.getName().endsWith(fileFormat);
 	    }
 	    
 	});

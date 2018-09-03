@@ -1,58 +1,43 @@
 package br.unip.model.sorters;
 
-public class QuickSorter implements Sorter{
+import static br.unip.model.Configs.QUICK_BRIEF;
+import static br.unip.model.Configs.QUICK_NAME;
+
+public final class QuickSorter implements Sorter{
     
+    private Comparable[] items;
     private boolean isReverse;
     
     @Override
     public void sort(Comparable[] items, boolean isReverse) {
 	this.isReverse = isReverse;
-	this.sort(items, 0, items.length-1);
+	this.items = items;
+	this.sort(0, items.length-1);
     }
-    
-    private void sort(Comparable[] items, int start, int end){
-	if(start < end){
-	    int pivotIndex = split(items, start, end);
-	    this.sort(items, start, pivotIndex - 1);
-	    this.sort(items, pivotIndex + 1, end);
-	}
-    }
-    
-    private int split(Comparable[] items, int start, int end){
-	Comparable pivot = items[start];
-	int i = start+1;
-	int e = end;
-	while(i <= e){
-	    int comparisonI = pivot.compareTo(items[i]);
-	    int comparisonE = pivot.compareTo(items[e]);
-	    if(isReverse){ 
-		comparisonI*=(-1);
-		comparisonE*=(-1);
+
+    private void sort(int l, int r){
+	int lb = l, ub = r;
+	Comparable pivot = items[((l+r)/2)];
+	do{
+	    while(items[lb].compareTo(pivot)*(isReverse?-1:1) < 0) lb++;
+	    while(items[ub].compareTo(pivot)*(isReverse?-1:1) > 0) ub--;
+	    if(lb <= ub){
+		Comparable temp = items[lb];
+		items[lb] = items[ub];
+		items[ub] = temp;
+		lb++;
+		ub--;
 	    }
-	    
-	    if(comparisonI > 0)i++;
-	    else if(comparisonE <= 0) e--;
-	    else{
-		Comparable temp = items[i];
-		items[i] = items[e];
-		items[e] = temp;
-		i++;
-		e--;
-	    }
-	}
-	items[start] = items[e];
-	items[e] = pivot;
-	return e;
+	}while(lb <= ub);
+	if (l < ub) this.sort(l, ub);
+	if (lb < r) this.sort(lb, r);
+	
     }
 
     @Override
-    public String getMethodName() {
-	return "Método Quick";
-    }
+    public String getMethodName() { return QUICK_NAME; }
 
     @Override
-    public String getMethodBrief() {
-	return "O Quick Sort se baseia na ideia de escolher um elemento que se denomina \"pivô\", ele será considerado uma referência de ordenação, do qual os elementos que possuem um valor menor que o pivô serão postos antes dele, e os valores que são maiores que a referência após ele.";
-    }
+    public String getMethodBrief() { return QUICK_BRIEF; }
     
 }

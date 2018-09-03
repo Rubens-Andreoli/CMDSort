@@ -1,18 +1,15 @@
 package br.unip.model.items;
 
+import static br.unip.model.Configs.INT_MAXVALUE;
+
 public class IntItem implements Item<IntItem>{
     private static final long serialVersionUID = 1L;
     
     private int value;
-    private static final int MAX_VALUE = 26000;
   
-    public void setValue(int value) {
-	this.value = value;
-    }
+    public void setValue(int value) { this.value = value; }
     
-    public int getValue() {
-	return value;
-    }  
+    public int getValue() { return value; }  
     
     @Override
     public int compareTo(IntItem item) {
@@ -21,12 +18,12 @@ public class IntItem implements Item<IntItem>{
 
     @Override
     public void generateRandom() {
-	value = (int) (Math.random() * MAX_VALUE);
+	value = (int) (Math.random() * INT_MAXVALUE);
     }
     
     @Override
     public String toString() {
 	return Integer.toString(value);
     } 
-
+    
 }

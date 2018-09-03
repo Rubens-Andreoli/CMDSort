@@ -1,9 +1,10 @@
 package br.unip.view.inputs;
 
-import br.unip.view.inputs.lang.Alerts;
-import br.unip.view.outputs.components.SimpleText;
+import static br.unip.view.Configs.INT_ERROR;
+import br.unip.view.Builder;
+import br.unip.view.outputs.SimpleText;
 
-public class IntInput extends CmdInput {
+public class IntInput extends CmdInput<Integer> {
 
     public IntInput(final String prompt) {
 	super(prompt);
@@ -16,7 +17,7 @@ public class IntInput extends CmdInput {
 	    if(scanner.hasNextInt()) 
 		return scanner.nextInt();
 	    else 
-		new SimpleText(Alerts.INT_ERROR).print();
+		Builder.build(new SimpleText(INT_ERROR)).println();
 	}
     }
 

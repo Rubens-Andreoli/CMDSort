@@ -1,6 +1,6 @@
 package br.unip.controller.actions;
 
-import static br.unip.controller.Controller.SAVE_FOLDER;
+import static br.unip.controller.Configs.*;
 import br.unip.model.io.FileIO;
 import br.unip.model.lists.VectorList;
 import br.unip.view.screens.MenuScreen;
@@ -11,34 +11,34 @@ public class Open implements Action{
 
     private final MenuScreen mainMenu;
     private MenuScreen openMenu;
-    private VectorList list;
     private File[] files;
+    private VectorList list;
 
     public Open(final MenuScreen mainMenu) {
 	this.mainMenu = mainMenu;
     }
 
-
     @Override
     public VectorList doAction() {
-	files = new FileIO<VectorList>().readFolder(SAVE_FOLDER);
+	files = new FileIO<VectorList>().readFolder(SAVE_FOLDER, SAVE_FORMAT);
 	if (files.length == 0) {
-	    mainMenu.setFooter("Não há lista(s) salva(s)!");
-	    mainMenu.displayFooter(true);
+	    mainMenu.setFooter(OPEN_EMPTY);
+	    mainMenu.displayFooter(false);
+	    mainMenu.waitEnter();
 	} else {
-	    openMenu = new MenuScreen("Relação de listas salvas", this.filesToStrings(files), "Digite o número correspondente ao arquivo desejado");
+	    openMenu = new MenuScreen(OPEN_TITLE, this.filesToStrings(files), OPEN_QUESTION);
 	    openMenu.display();
 	    try {
-		list = new FileIO<VectorList>().readFile(files[openMenu.getUserInput() - 1]);
-		openMenu.setFooter("Lista " + files[openMenu.getUserInput() - 1].getName() + " carregada com sucesso.");
+		list = new FileIO<VectorList>().readFile(files[openMenu.getUserInput()-1]);
+		openMenu.setFooter(String.format(OPEN_SUCCESS_MASK, 
+			files[openMenu.getUserInput()-1].getName()));
 	    } catch (IOException ex) {
-		list = null;
-		openMenu.setFooter("Arquivo não encontrado!");
+		openMenu.setFooter(OPEN_NOT_FOUND);
 	    } catch (ClassNotFoundException ex) {
-		list = null;
-		openMenu.setFooter("Lista incompatível com a versão atual!");
+		openMenu.setFooter(OPEN_CLASS_ERROR);
 	    }
 	    openMenu.displayFooter(true);
+	    openMenu.waitEnter();
 	}
 	return list;
     }
@@ -50,5 +50,5 @@ public class Open implements Action{
         }
         return filesInString;
     }
-
+    
 }

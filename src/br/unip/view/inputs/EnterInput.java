@@ -1,12 +1,11 @@
-
 package br.unip.view.inputs;
 
-import br.unip.view.inputs.lang.Alerts;
+import static br.unip.view.Configs.ENTER_PROMPT;
 
-public class EnterInput extends CmdInput {
+public class EnterInput extends CmdInput<Void> {
 
     public EnterInput() {
-	super(Alerts.ENTER_MSG);
+	super(ENTER_PROMPT);
     }
     
     @Override
@@ -15,5 +14,5 @@ public class EnterInput extends CmdInput {
 	scanner.nextLine();
 	return null;
     }
-    
+
 }

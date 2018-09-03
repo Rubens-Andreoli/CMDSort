@@ -1,14 +1,16 @@
 package br.unip.view.inputs;
 
-import br.unip.view.inputs.lang.Alerts;
 import java.util.Scanner;
-import br.unip.view.outputs.components.SimpleText;
+import br.unip.view.Builder;
+import br.unip.view.outputs.SimpleText;
+import static br.unip.view.Configs.RANGE_ERROR;
+import static br.unip.view.Configs.RANGE_MASK;
 
-public class RangeInput extends CmdInput{
+public class RangeInput extends CmdInput<Integer>{
 
     private final int min;
     private final int max;
-    private int value;
+    private int input;
     
     public RangeInput(final String prompt, final int max){
 	this(prompt, 1, max);
@@ -22,7 +24,7 @@ public class RangeInput extends CmdInput{
 
     @Override
     protected void askInput() {
-	value = new IntInput(String.format("%s (%d-%d): ", prompt, min, max)).getInput();
+	input = new IntInput(String.format(RANGE_MASK, prompt, min, max)).getInput();
 	scanner = new Scanner(System.in);
     }
     
@@ -30,10 +32,8 @@ public class RangeInput extends CmdInput{
     public Integer getInput() {
 	while(true){
 	    askInput();
-	    if(value >= min && value <= max)
-		return value;
-	    else
-		new SimpleText(String.format(Alerts.LMTINT_ERROR, min, max)).print();
+	    if(input >= min && input <= max) return input;
+	    else Builder.build(new SimpleText(String.format(RANGE_ERROR, min, max))).println();
 	}
     }
     

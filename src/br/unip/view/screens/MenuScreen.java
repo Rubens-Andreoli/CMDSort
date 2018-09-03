@@ -1,25 +1,26 @@
 package br.unip.view.screens;
 
 import br.unip.view.inputs.RangeInput;
-import br.unip.view.outputs.components.CharLine;
-import br.unip.view.outputs.structures.Menu;
-import br.unip.view.outputs.structures.TopBox;
+import br.unip.view.Builder;
+import br.unip.view.outputs.CharLine;
+import br.unip.view.screens.components.Menu;
+import br.unip.view.screens.components.TopBox;
 
-public class MenuScreen extends InputScreen<Integer>{
-
+public class MenuScreen extends InputScreen<Integer> {
+     
     private final Menu menu;
-
+    
     public MenuScreen(final String title, final String[] items, final String prompt) {
-	super(new TopBox(title), new RangeInput(prompt, items.length));
-	menu = new Menu(items);
+	super(Builder.build(new TopBox(title)), new RangeInput(prompt, items.length));
+	menu = Builder.build(new Menu(items)); 
     }
-
+    
     @Override
-    public void display() {
-	top.print();
-	menu.print();
-	new CharLine(2).print();
-	userInput = (Integer) prompt.getInput();
-    }
-
+    public void display(){
+	top.println();
+	menu.println();
+	Builder.build(new CharLine(2)).println();
+	userInput = (Integer) question.getInput();
+    }  
+    
 }

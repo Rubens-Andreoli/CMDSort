@@ -1,9 +1,10 @@
 package br.unip.view.inputs;
 
+import br.unip.view.Builder;
 import java.util.Scanner;
-import br.unip.view.outputs.components.SimpleText;
+import br.unip.view.outputs.SimpleText;
 
-public abstract class CmdInput {
+public abstract class CmdInput<Type extends Object> {
     
     protected final String prompt;
     protected Scanner scanner;
@@ -11,20 +12,12 @@ public abstract class CmdInput {
     public CmdInput(final String prompt){
 	this.prompt = prompt;
     }
-    
+
     protected void askInput(){
-	new SimpleText(prompt).print();
+	Builder.build(new SimpleText(prompt)).print();
 	scanner = new Scanner(System.in);
     }
-    
-    public abstract Object getInput();
-    
-    public Object[] getLoopped(int repeat) {
-	Object[] inputs = new Object[repeat];
-	for(int i=0; i<repeat; i++){
-	    inputs[i] = this.getInput();
-	}
-	return inputs;
-    }
+
+    public abstract Type getInput();
     
 }

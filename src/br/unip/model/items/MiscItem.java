@@ -1,26 +1,22 @@
 package br.unip.model.items;
 
+import static br.unip.model.Configs.MISC_MAX_CH;
+import static br.unip.model.Configs.MISC_START_CH;
+import static br.unip.model.Configs.MISC_MAX_VALUE;
+
 public class MiscItem implements Item<MiscItem>{
     private static final long serialVersionUID = 1L;
     
     private char ch;
     private int value;
-    private static final int MAX_VALUE = 1000;
-    private static final char START_CH = 'A';
-    private static final int MAX_CH = 26;	    /*Valor de 'ch' máximo com início em 'START_CH'*/
 
     public void setItem(char ch, int value){
 	this.ch = Character.toUpperCase(ch);
 	this.value = value;
     }
     
-    public char getChar(){
-	return ch;
-    }
-    
-    public int getValue(){
-	return value;
-    }
+    public char getChar(){ return ch; }
+    public int getValue(){ return value; }
     
     @Override
     public int compareTo(MiscItem item) {
@@ -39,8 +35,8 @@ public class MiscItem implements Item<MiscItem>{
 
     @Override
     public void generateRandom() {
-	value = (int) (Math.random() * MAX_VALUE);
-	ch = (char) (START_CH + ((int) (Math.random() * MAX_CH)));
+	value = (int) (Math.random() * MISC_MAX_VALUE);
+	ch = (char) (MISC_START_CH + ((int) (Math.random() * MISC_MAX_CH)));
     }
 
     @Override

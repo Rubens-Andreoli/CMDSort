@@ -1,11 +1,12 @@
 package br.unip.view.inputs;
 
-import br.unip.view.inputs.lang.Alerts;
-import br.unip.view.outputs.components.SimpleText;
+import static br.unip.view.Configs.STRING_ERROR;
+import br.unip.view.Builder;
+import br.unip.view.outputs.SimpleText;
 
-public class StringInput extends CmdInput {
+public class StringInput extends CmdInput<String> {
 
-    private String regex;
+    private final String regex;
     
     public StringInput(final String prompt, final String regex) {
 	super(prompt);
@@ -20,8 +21,8 @@ public class StringInput extends CmdInput {
 	    word = scanner.nextLine();
 	    word = word.trim();
 	    if(word.matches(regex)) return word;
-	    else new SimpleText(Alerts.STRING_ERROR).print();
+	    else Builder.build(new SimpleText(STRING_ERROR)).println();
 	}
     }
-    
+
 }

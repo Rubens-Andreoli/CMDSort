@@ -5,4 +5,5 @@ public interface Sorter {
     void sort(Comparable[] items, boolean isReverse);
     String getMethodName();
     String getMethodBrief();
+    
 }

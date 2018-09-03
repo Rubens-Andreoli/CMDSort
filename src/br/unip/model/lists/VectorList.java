@@ -1,12 +1,9 @@
 package br.unip.model.lists;
 
 import java.io.Serializable;
-import java.util.Iterator;
-import br.unip.model.items.Item;
-import br.unip.model.lists.exceptions.FullListException;
 import br.unip.model.sorters.Sorter;
 
-public class VectorList<Type extends Item> implements Serializable, Iterable{
+public class VectorList<Type extends Comparable & Serializable>  implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Type[] items;
@@ -16,23 +13,28 @@ public class VectorList<Type extends Item> implements Serializable, Iterable{
     private boolean sorted;
 
     public VectorList(VectorList<Type> list){
-	this.items = list.items;
+	this.items = list.items.clone();
 	this.maxItems = list.maxItems;
 	this.numItems = list.numItems;
     }
     
     public VectorList(int maxItems) {
-	items = (Type[]) new Item[maxItems];
+	items = (Type[]) new Comparable[maxItems];
 	this.maxItems = maxItems;
 	numItems = 0;
 	sorted = false;
     }
 
-    public void addItem(Type item) throws FullListException {
+    public void addItem(Type item){
 	if (numItems < maxItems) {
 	    items[numItems] = item;
 	    numItems++;
-	} else throw new FullListException();
+	}
+    }
+
+    public void setItems(Type[] items) {
+	this.items = items;
+	this.numItems = items.length;
     }
 
     public void sort(Sorter sorter, Boolean isReverse) {
@@ -41,49 +43,11 @@ public class VectorList<Type extends Item> implements Serializable, Iterable{
 	sorted = true;
     }
 
-    public Type[] getItems() {
-	return items;
-    }
-
-    public int getNumItems() {
-	return numItems;
-    }
-
-    public int getMaxItems() {
-	return maxItems;
-    }
-
-    public boolean isSorted() {
-	return sorted;
-    }
-
-    public Sorter getSortMethod() {
-	return sortMethod;
-    }
-
-    @Override
-    public Iterator iterator() {
-	Iterator<Type> iterator = new Iterator<Type>() {
-
-	    private int currentIndex = 0;
-
-	    @Override
-	    public boolean hasNext() {
-		return currentIndex < maxItems && items[currentIndex] != null;
-	    }
-
-	    @Override
-	    public Type next() {
-		return items[currentIndex++];
-	    }
-
-	    @Override
-	    public void remove() {
-		throw new UnsupportedOperationException();
-	    }
-	};
-	return iterator;
-    }
+    public Type[] getItems() { return items; }
+    public int getNumItems() { return numItems; }
+    public int getMaxItems() { return maxItems; }
+    public boolean isSorted() { return sorted; }
+    public Sorter getSortMethod() { return sortMethod; }
 
     @Override
     public String toString() {
@@ -108,7 +72,5 @@ public class VectorList<Type extends Item> implements Serializable, Iterable{
 	}
 	return itemsInString.toString();
     }
-    
-    
-    
+ 
 }

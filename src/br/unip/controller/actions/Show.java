@@ -1,22 +1,29 @@
 package br.unip.controller.actions;
 
+import static br.unip.controller.Configs.*;
 import br.unip.model.lists.VectorList;
 import br.unip.view.screens.TextScreen;
 
 public class Show implements Action{
     
+    private final int numItems;
     private final VectorList list;
     
-    public Show(final VectorList list){
+    public Show(final VectorList list, final int numItems){
 	this.list = list;
+	this.numItems = numItems;
     }
 
     @Override
     public Object doAction() {
-	new TextScreen("Visualização de lista", 
-		list.toString(list.getNumItems()>200?200:list.getNumItems()), 
-		String.format("Lista %s, exibida com sucesso.", list.isSorted()?"ordenada pelo "+list.getSortMethod().getMethodName():"não ordenada")).display();
+	TextScreen show = new TextScreen(SHOW_TITLE, 
+		list.toString(list.getNumItems()>numItems ? numItems : list.getNumItems()), 
+		String.format(SHOW_MSG_MASK, 
+			list.isSorted() ? String.format(SHOW_ORDER_MASK, 
+				list.getSortMethod().getMethodName()) : SHOW_NOT_ORDER)
+	);
+	show.display();
 	return null;
     }
-    
+
 }

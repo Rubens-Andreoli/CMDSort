@@ -1,24 +1,18 @@
 package br.unip.view.screens;
 
 import br.unip.view.inputs.CmdInput;
-import br.unip.view.outputs.structures.TopBox;
+import br.unip.view.screens.components.TopBox;
 
 public abstract class InputScreen<Type extends Object> extends Screen{
     
-    protected final CmdInput prompt;
+    protected final CmdInput question;
     protected Type userInput;
-
-    public InputScreen(final TopBox top, final CmdInput prompt) {
+    
+    public InputScreen(final TopBox top, final CmdInput cmdInput) {
 	super(top);
-	this.prompt = prompt;
+	this.question = cmdInput;
     }
-    
-    public Type getUserInput(){
-	return userInput;
-    }
-    
-    public Object extraQuestion(CmdInput input){
-	return input.getInput();
-    }
-    
+
+    public Type getUserInput() { return userInput; }
+
 }

@@ -1,85 +1,102 @@
 package br.unip.controller.actions;
 
+import static br.unip.controller.Configs.*;
 import br.unip.model.lists.VectorList;
-import br.unip.model.sorters.BubbleSorter;
-import br.unip.model.sorters.InsertionSorter;
-import br.unip.model.sorters.MergeSorter;
-import br.unip.model.sorters.QuickSorter;
+import br.unip.model.sorters.Sorter;
+import br.unip.view.inputs.BooleanInput;
 import br.unip.view.screens.MenuScreen;
 import br.unip.view.screens.QuestionScreen;
 import br.unip.view.screens.TextScreen;
+import java.util.List;
 
 public class Order implements Action{
 
     private final MenuScreen orderMenu;
     private final QuestionScreen orderQuestion;
     private final VectorList list;
+    private final List<Sorter> sorters;
 
-    public Order(final MenuScreen orderMenu, final QuestionScreen orderQuestion, final VectorList list) {
-	this.orderMenu = orderMenu;
-	this.orderQuestion = orderQuestion;
+    public Order(final List<Sorter> methods, final VectorList list) {
+	this.sorters = methods;
+	this.orderMenu = new MenuScreen(ORDER_METHOD_TITLE, this.sortersToString(), ORDER_METHOD_QUESTION);
+	this.orderQuestion = new QuestionScreen(ORDER_RULE_TITLE, new BooleanInput(ORDER_RULE_QUESTION, 
+		ORDER_RULE_DECRESCENT, ORDER_RULE_CRESCENT));
 	this.list = list;
+    }
+    
+    private String[] sortersToString() {
+	String[] methodsString = new String[sorters.size()+1];
+	int i;
+	for(i=0; i<sorters.size(); i++){
+	    methodsString[i] = sorters.get(i).getMethodName();
+	}
+	methodsString[i] = ORDER_METHOD_COMP;
+	return methodsString;
     }
 
     @Override
     public Void doAction() {
 	orderMenu.display();
 	orderQuestion.display();
-	orderQuestion.setFooter("Processando...\n");
-	orderQuestion.displayFooter(false);
-	long time = this.orderList()[0];
-	if (orderMenu.getUserInput() == 4) {
-	    //TODO: Exibir comparativo!
-	} else {
-	    new TextScreen("Ordenação pelo " + list.getSortMethod().getMethodName(),
-		    list.getSortMethod().getMethodBrief(),
-		    "A ordenação foi concluida com sucesso em " + time + " ms.\n").display();
-	}
+        orderQuestion.setFooter(INDICATOR_MSG);
+	orderQuestion.displayFooter(true);
+        this.orderList();
 	return null;
     }
 
-    private long[] orderList() {
-	long start;
-	long end;
-	switch (orderMenu.getUserInput()) {
-	    case 1:
+    private void orderList() {
+	long start, end;
+	String method = "Método x";
+	try{
+	    if(orderMenu.getUserInput() == sorters.size()+1){	
+		VectorList[] clonedLists = this.cloneList();
+		StringBuilder results = new StringBuilder();
+		/*Para cada um dos 'sorters' mede o tempo de excução na ordenação de uma cópia da lista:*/
+		for(int i=0; i<sorters.size(); i++){
+		    method = sorters.get(i).getMethodName();
+		    start = System.currentTimeMillis();
+		    clonedLists[i].sort(sorters.get(i), (Boolean) orderQuestion.getUserInput());
+		    end = System.currentTimeMillis();
+		    results.append(String.format(ORDER_COMP_MASK, method, this.time(end - start)));
+		}
+		new TextScreen(ORDER_COMP_TITLE, clonedLists[0].toString(60), results.toString()).display();
+	    }else{
+		method = sorters.get(orderMenu.getUserInput()-1).getMethodName();
 		start = System.currentTimeMillis();
-		list.sort(new BubbleSorter(), (boolean) orderQuestion.getUserInput());
+		list.sort(sorters.get(orderMenu.getUserInput()-1), (boolean) orderQuestion.getUserInput());
 		end = System.currentTimeMillis();
-		return new long[]{end - start};
-	    case 2:
-		start = System.currentTimeMillis();
-		list.sort(new InsertionSorter(), (boolean) orderQuestion.getUserInput());
-		end = System.currentTimeMillis();
-		return new long[]{end - start};
-	    case 3:
-		start = System.currentTimeMillis();
-		list.sort(new MergeSorter(), (boolean) orderQuestion.getUserInput());
-		end = System.currentTimeMillis();
-		return new long[]{end - start};
-	    case 4:
-		start = System.currentTimeMillis();
-		list.sort(new QuickSorter(), (boolean) orderQuestion.getUserInput());
-		end = System.currentTimeMillis();
-		return new long[]{end - start};
-	    case 5:
-		long[] times = new long[3];
-		start = System.currentTimeMillis();
-		new VectorList(list).sort(new BubbleSorter(), (boolean) orderQuestion.getUserInput());
-		end = System.currentTimeMillis();
-		times[0] = end - start;
-		start = System.currentTimeMillis();
-		new VectorList(list).sort(new MergeSorter(), (boolean) orderQuestion.getUserInput());
-		end = System.currentTimeMillis();
-		times[1] = end - start;
-		start = System.currentTimeMillis();
-		new VectorList(list).sort(new QuickSorter(), (boolean) orderQuestion.getUserInput());
-		end = System.currentTimeMillis();
-		times[2] = end - start;
-		return times;
-	    default:
-		return null;
+		new TextScreen(String.format(ORDER_TITLE_MASK, method),
+		    list.getSortMethod().getMethodBrief(),
+		    String.format(ORDER_MSG_MASK, this.time(end-start))).display();
+	    }
+	}catch(StackOverflowError ex){
+		orderQuestion.setFooter(String.format(ORDER_ERROR_MASK, method));
+		orderQuestion.displayFooter(true);
+		orderQuestion.waitEnter();
 	}
+    }
+    
+    private String time(long milli) {
+	if(milli >= 60000){
+	    int minutes = (int) (milli/60000);
+	    int seconds = (int) ((milli-(minutes*60000))/1000);
+	    int millis = (int) ((milli-((seconds*1000)+(minutes*60000))));
+	    return String.format(TIME_MASK_M, minutes, seconds, millis);
+	}else if(milli >= 1000){
+	    int seconds = (int) milli/1000;
+	    int millis = (int) ((milli-(seconds*1000)));
+	    return String.format(TIME_MASK_S, seconds, millis);
+	}
+	return String.format(TIME_MASK_MS, milli);
+    }
+    
+    
+    private VectorList[] cloneList(){
+	VectorList[] clonedLists = new VectorList[sorters.size()];
+	for(int i=0; i<sorters.size(); i++){
+	    clonedLists[i] = new VectorList(list);
+	}
+	return clonedLists;
     }
 
 }
